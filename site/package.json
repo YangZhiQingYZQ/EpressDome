@@ -6,10 +6,14 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
+  "author": "YangZhiQing",
   "license": "ISC",
   "dependencies": {
     "express": "^4.16.3",
     "express3-handlebars": "^0.5.2"
+  },
+  "devDependencies": {
+    "chai": "^4.1.2",
+    "mocha": "^5.2.0"
   }
 }

@@ -7,6 +7,12 @@ app.engine('handlebars',handlebars.engine);
 app.set('view engine','handlebars');
 //------------
 
+//----------检测查询字符串的中间件
+app.use((req,res,next)=>{
+	res.locals.showTests = app.get('env') !== 'production' && req.query.test === "1";
+	next();
+});
+//--------------
 
 
 //static中间件（将一个或多个目录指派包含静态资源的目录，其中的资源不经过任何特殊处理直接发送到客户端）
@@ -19,8 +25,12 @@ app.get('/',(req,res)=>{
 	res.render('home');
 });
 app.get('/about',(req,res)=>{//动态显示内容
-	let randomFortune = fortunes[Math.floor(Math.random()*fortunes.length)];
-	res.render("about",{fortune:fortune.getFortune()});
+//	let randomFortune = fortune[Math.floor(Math.random()*fortune.length)];
+//	res.render("about",{fortune:fortune.getFortune()});
+	res.render('about',{
+		fortune:fortune.getFortune(),
+		pageTestScript:'/qa/tests-about.js'
+	});
 });
 
 //404 catch-all处理器（中间件）

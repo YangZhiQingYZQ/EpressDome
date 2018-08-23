@@ -8,6 +8,6 @@ let fortuneCookies = [
 ];
 
 exports.getFortune = ()=>{
-	let idx = math.floor(Math.random()*fortunes.length);
-	return fortuneCookies[idx]''
+	let idx = Math.floor(Math.random()*fortuneCookies.length);
+	return fortuneCookies[idx];
 }
