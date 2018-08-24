@@ -13,7 +13,16 @@ app.use((req,res,next)=>{
 	next();
 });
 //--------------
-
+//-----------v-6.3请求报头：查看浏览器发送的信息
+app.get('/headers',(req,res)=>{
+	res.set("Content-Type","text/plain");
+	let s = "";
+	for(let name in req.headers){
+		s += `${name}:${req.headers[name]}\n`;
+	};
+	res.send(s);
+});
+//----------------------
 
 //static中间件（将一个或多个目录指派包含静态资源的目录，其中的资源不经过任何特殊处理直接发送到客户端）
 //相当于给你想要发送的所有静态文件创建了一个路由，并发送给客户端
