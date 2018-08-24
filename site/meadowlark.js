@@ -27,10 +27,12 @@ app.get('/',(req,res)=>{
 app.get('/about',(req,res)=>{//动态显示内容
 //	let randomFortune = fortune[Math.floor(Math.random()*fortune.length)];
 //	res.render("about",{fortune:fortune.getFortune()});
+//------------------针对about页面的测试代码
 	res.render('about',{
 		fortune:fortune.getFortune(),
 		pageTestScript:'/qa/tests-about.js'
 	});
+//-------------------
 });
 
 //404 catch-all处理器（中间件）
