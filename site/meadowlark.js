@@ -35,6 +35,15 @@ app.get('/about',(req,res)=>{//动态显示内容
 //-------------------
 });
 
+//--------------v5.70：设置旅游线路路由及其引用页面的路由
+app.get("/tours/hood-river",()=>{
+	res.render("tours/hood-river");
+});
+app.get("/tours/request-group-rate",()=>{
+	res.render("tours/request-group-rate");
+});
+//-------------
+
 //404 catch-all处理器（中间件）
 app.use((req,res,next)=>{
 	res.status(404);
