@@ -13,7 +13,8 @@ let express = require("express"),
 			}
 		}
 		//--------
-	});
+	}),
+	formidable = require('formidable');//v8.7.0加载处理上传文件的插件
 app.engine('handlebars',handlebars.engine);
 app.set('view engine','handlebars');
 //------------
@@ -99,6 +100,27 @@ app.set('port',process.env.PORT ||3000);//设置端口
 app.get('/',(req,res)=>{
 	res.render('home');
 });
+
+//----------------v8.7.0处理上传的文件
+app.get('/contest/vacation-photo',(req,res)=>{
+	let now  = new Date();
+	res.render('contest/vacation-photo',{
+		year : now.getFullYear(),
+		month : now.getMonth()
+	});
+});
+app.post('/contest/vacation-photo/:year/:month',(req,res)=>{
+	let form = new formidable.IncomingForm();
+	form.parse(req,(err,fields,file)=>{
+		if(err) return res.redirect(303,'/about');
+		console.log('received fields:');
+		console.log(fields);
+		console.log('received files:');
+		console.log(files);
+		res.redirect(303,"/about");
+	})
+});
+//----------------------------
 
 //------------v7.4.9针对nursery rhyme页面和AJAX调用的路由处理程序
 app.get('/nursery-rhyme',(req,res)=>{
