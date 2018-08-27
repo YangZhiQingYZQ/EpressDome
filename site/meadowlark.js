@@ -128,6 +128,22 @@ app.post("/process",(req,res)=>{
 	res.redirect(303,'/about');
 });
 //------------
+
+//--------------v8.6.0
+app.get('/newsletterAjax',(req,res)=>{
+	res.render("newsletterAjax",{layout : "test"})
+});
+app.post('/processAajx',(req,res)=>{
+	if(req.xhr || req.accepts('json,html') == 'json'){
+		//如果发生错误，应该发送{error : "error description"}
+		res.send({success:true});
+	}else{
+		//如果发生错误,应该重定向到错误页面
+		res.redirect(303,"/about")
+	}
+});
+//----------------
+
 app.get('/about',(req,res)=>{//动态显示内容
 //	let randomFortune = fortune[Math.floor(Math.random()*fortune.length)];
 //	res.render("about",{fortune:fortune.getFortune()});
