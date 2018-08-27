@@ -2,7 +2,18 @@ let express = require("express"),
 	app = express(),
 	fortune = require('./lib/fortune.js'),
 //-----------创建视图引擎，对Express进行配置，将其作为默认的视图引擎
-	handlebars = require("express3-handlebars").create({defaultLayout:"main"});
+	handlebars = require("express3-handlebars").create({
+		defaultLayout:"main",
+		//------ v7.4.7
+		helpers : {
+			section : (name,options)=>{
+				if(!this._sections) this._sections = {}
+				this.sections[name] = options.fn(this);
+				return null;
+			}
+		}
+		//--------
+	});
 app.engine('handlebars',handlebars.engine);
 app.set('view engine','handlebars');
 //------------
@@ -37,11 +48,6 @@ function getWeatherData(){
 }
 //创建中间件,给res.locals.partials对象添加数据
 app.use((req,res,next)=>{
-	// if(!res.locals.partials){
-	// 	res.locals.partials = {};
-	// }
-	// res.locals.partials.wather = getWeatherData();
-	// next();
 	if(!res.locals.partials) res.locals.partials = {};
 	res.locals.partials.weather = getWeatherData();
 	next();
