@@ -18,6 +18,10 @@ app.engine('handlebars',handlebars.engine);
 app.set('view engine','handlebars');
 //------------
 
+//----v8.5.0(使用表单中间件)
+app.use(require('body-parser')());
+//-----
+
 //------------v7.4.6局部文件
 function getWeatherData(){
 	return {
@@ -110,9 +114,20 @@ app.get('/data/nursery-rhyme',(req,res)=>{
 });
 //----------------
 
-
-
-
+//-------------v8.5.0
+app.get("/newsletter",(req,res)=>{
+	res.render("newsletter",{csrf : 'CSRF token goes here'});
+});
+app.post("/process",(req,res)=>{
+	console.log(req.query);
+	console.log('Form(from querystring):'+req.query.form);
+	console.log('CSRF token (from hidden form field:'+ req.body._csrf);
+	console.log('Name (from visible from field):'+req.body.name);
+	console.log('Email (from visible from field):'+req.body.email);
+	console.log('Email (from visible form field):' + req.body.email);
+	res.redirect(303,'/about');
+});
+//------------
 app.get('/about',(req,res)=>{//动态显示内容
 //	let randomFortune = fortune[Math.floor(Math.random()*fortune.length)];
 //	res.render("about",{fortune:fortune.getFortune()});
