@@ -6,9 +6,9 @@ let express = require("express"),
 		defaultLayout:"main",
 		//------ v7.4.7
 		helpers : {
-			section : (name,options)=>{
+			section : function(name,options){
 				if(!this._sections) this._sections = {}
-				this.sections[name] = options.fn(this);
+				this._sections[name] = options.fn(this);
 				return null;
 			}
 		}
@@ -52,9 +52,9 @@ app.use((req,res,next)=>{
 	res.locals.partials.weather = getWeatherData();
 	next();
 })
-
-
 //-------------
+
+
 
 //----------检测查询字符串的中间件
 app.use((req,res,next)=>{
@@ -95,6 +95,24 @@ app.set('port',process.env.PORT ||3000);//设置端口
 app.get('/',(req,res)=>{
 	res.render('home');
 });
+
+//------------v7.4.9针对nursery rhyme页面和AJAX调用的路由处理程序
+app.get('/nursery-rhyme',(req,res)=>{
+	res.render('nursery-rhyme',{layout:"test"});
+});
+app.get('/data/nursery-rhyme',(req,res)=>{
+	res.json({
+		animal : "squirrel",
+		bodyPart : 'tail',
+		adjective : 'bushy',
+		noun : 'heck'
+	});
+});
+//----------------
+
+
+
+
 app.get('/about',(req,res)=>{//动态显示内容
 //	let randomFortune = fortune[Math.floor(Math.random()*fortune.length)];
 //	res.render("about",{fortune:fortune.getFortune()});
