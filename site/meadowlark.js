@@ -14,10 +14,25 @@ let express = require("express"),
 		}
 		//--------
 	}),
-	formidable = require('formidable');//v8.7.0加载处理上传文件的插件
+	formidable = require('formidable'),//v8.7.0加载处理上传文件的插件
+	jqupload = require('jquery-file-upload-middleware');//v8.8.0加载处理上传文件的jquery插件
 app.engine('handlebars',handlebars.engine);
 app.set('view engine','handlebars');
 //------------
+
+//----------------v8.8.8（使用jquery处理上传插件）
+app.use('/upload',(req,res)=>{
+	let now = Date.now();
+	jpupload.fileHandler({
+		uploadDir(){
+			return __dirname + '/public/uploads/'+now;
+		},
+		uploadUrl(){
+			return "/uploads/"+now;
+		}
+	})(req,res,next);
+});
+//------------------
 
 //----v8.5.0(使用表单中间件)
 app.use(require('body-parser')());
@@ -100,6 +115,12 @@ app.set('port',process.env.PORT ||3000);//设置端口
 app.get('/',(req,res)=>{
 	res.render('home');
 });
+
+//---------------v8.8.0jquery处理上传插件
+app.get('/jqupload',(req,res)=>{
+	res.render('jqupload',{layout:"test"});
+});
+//------------------
 
 //----------------v8.7.0处理上传的文件
 app.get('/contest/vacation-photo',(req,res)=>{

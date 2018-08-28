@@ -1,0 +1,31 @@
+<span class="btn ben-default btn-file">
+    Upload
+    <input 
+        type="file" 
+        class="form-control"
+        required
+        accept = "image/*"
+        id = "filedPhoto"
+        data-url = "/upload"
+        multiple 
+        name = "photo">
+</span>
+<div id="fileUploads"></div>
+
+{{#section 'jquery'}}
+    <script>
+        $(document).ready(()=>{
+            console.log('aa')
+            $("#filedPhoto").fileupload({
+                dataType : 'json',
+                done(e,data){
+                    conosle.log(e);
+                    console.log(data);
+                    $.each(data.result.files,(idx,file)=>{
+                        $('#fileUploads').append($("<div class = 'upload'>"+"<span class = 'glyphicon-ok'></span>"+"&nbsp;"+"file.originalName"+"</div>"))
+                    })
+                }
+            })
+        })
+    </script>
+{{/section}}
