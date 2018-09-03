@@ -1,6 +1,7 @@
 let express = require("express"),
 	app = express(),
 	fortune = require('./lib/fortune.js'),
+	cartValidation = require("./lib/cartValidation.js"),
 //-----------创建视图引擎，对Express进行配置，将其作为默认的视图引擎
 	handlebars = require("express3-handlebars").create({
 		defaultLayout:"main",
@@ -20,6 +21,16 @@ let express = require("express"),
 app.engine('handlebars',handlebars.engine);
 app.set('view engine','handlebars');
 //------------
+
+
+
+
+//---------------v10.0.0
+app.use(require("./lib/requiresWaiver.js"));
+app.use(cartValidation.checkWaivers);
+app.use(cartValidation.checkGuestCounts);
+//-------------------
+
 
 //------------v9.2.0引入并使用cookie-parser中间件
 app.use(require('cookie-parser')(credentials.cookieSecret));
