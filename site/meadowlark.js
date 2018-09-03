@@ -15,10 +15,31 @@ let express = require("express"),
 		//--------
 	}),
 	formidable = require('formidable'),//v8.7.0加载处理上传文件的插件
-	jqupload = require('jquery-file-upload-middleware');//v8.8.0加载处理上传文件的jquery插件
+	jqupload = require('jquery-file-upload-middleware'),//v8.8.0加载处理上传文件的jquery插件
+	credentials = require('./credentials.js');//v9.1.0cookie秘钥
 app.engine('handlebars',handlebars.engine);
 app.set('view engine','handlebars');
 //------------
+
+//------------v9.2.0引入并使用cookie-parser中间件
+app.use(require('cookie-parser')(credentials.cookieSecret));
+//使用方式
+// res.cookie("monster",nom nom);
+// res.cookie("signed_monster","nom nom",{signed : true});
+//----------------
+
+//------------v9.4.1引入并使用express-session中间件
+app.use(require('express-session')());
+//---------------
+
+//-------------v9.5.0
+app.use((req,res,next)=>{
+	//如果有即显消息，把它传到上下文中，然后清楚它
+	res.locals.flash = req.session.flash;
+	delete req.session.flash;
+	next();
+});
+//-----------------
 
 //----------------v8.8.8（使用jquery处理上传插件）
 app.use('/upload',(req,res)=>{
@@ -115,6 +136,42 @@ app.set('port',process.env.PORT ||3000);//设置端口
 app.get('/',(req,res)=>{
 	res.render('home');
 });
+
+//------------v9.5.0
+app.get("/cookieNewsletter",(req,res)=>{
+	return res.render("cookieNewsletter");
+})
+app.post("/cookieNewsletterPost",(req,res)=>{
+	let name = req.body.name || "",
+		email = req.body.email || "";
+	if(!email.match("VALID_EMAIL_REGEX")){//输入验证
+		req.session.flash = {
+			type : 'danger',
+			intro : "Validation error!",
+			message : "The email address you entered was not valid.",
+		};
+		return res.redirect(303,"/about")
+	};
+	new NewsletterSigup({name : name ,email:email}).save((err)=>{
+		if(err){
+			if(req.xhr) return res.json({error : "Database error."});
+			req.session.flash = {
+				type : "danger",
+				intro : "Database error!",
+				message : "There was a datadase error;please try again later.",
+			}
+			return res.redirect(303,"/about");
+		}
+		if(req.xhr) return res.json({success : true});
+		req.session.flash = {
+			type : "success",
+			intro : "Thank you!",
+			message : "You have now been signed up for the newsletter.",
+		}
+		return res.redirect(303,"/about");
+	})
+});
+//-------------
 
 //---------------v8.8.0jquery处理上传插件
 app.get('/jqupload',(req,res)=>{
