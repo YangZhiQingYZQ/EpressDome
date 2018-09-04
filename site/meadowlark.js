@@ -2,6 +2,7 @@ let express = require("express"),
 	app = express(),
 	fortune = require('./lib/fortune.js'),
 	cartValidation = require("./lib/cartValidations.js"),
+	credentials = require('./credentials.js'),//v9.1.0cookie秘钥
 //-----------创建视图引擎，对Express进行配置，将其作为默认的视图引擎
 	handlebars = require("express3-handlebars").create({
 		defaultLayout:"main",
@@ -15,9 +16,17 @@ let express = require("express"),
 		}
 		//--------
 	}),
+	nodemailer = require("nodemailer"),//v11.6.0
+	// mailTransport = nodemailer.createTransport('SMTP',{//v11.6.0
+	// 	service : "Gmail",
+	// 	auth : {
+	// 		user : credentials.gmail.user,
+	// 		pass : credentials.gmail.password,
+	// 	}
+	// }),
 	formidable = require('formidable'),//v8.7.0加载处理上传文件的插件
-	jqupload = require('jquery-file-upload-middleware'),//v8.8.0加载处理上传文件的jquery插件
-	credentials = require('./credentials.js');//v9.1.0cookie秘钥
+	jqupload = require('jquery-file-upload-middleware');//v8.8.0加载处理上传文件的jquery插件
+	
 app.engine('handlebars',handlebars.engine);
 app.set('view engine','handlebars');
 //------------
