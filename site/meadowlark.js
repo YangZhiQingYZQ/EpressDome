@@ -17,13 +17,15 @@ let express = require("express"),
 		//--------
 	}),
 	nodemailer = require("nodemailer"),//v11.6.0
-	// mailTransport = nodemailer.createTransport('SMTP',{//v11.6.0
-	// 	service : "Gmail",
-	// 	auth : {
-	// 		user : credentials.gmail.user,
-	// 		pass : credentials.gmail.password,
-	// 	}
-	// }),
+	mailTransport = nodemailer.createTransport({//v11.6.0
+		host : "smtp.163.com",
+		// service : "Gmail",
+		secureConnection:true,
+		auth : {
+			user : credentials["163"].user,
+			pass : credentials["163"].password,
+		}
+	}),
 	formidable = require('formidable'),//v8.7.0加载处理上传文件的插件
 	jqupload = require('jquery-file-upload-middleware');//v8.8.0加载处理上传文件的jquery插件
 	
