@@ -61,7 +61,7 @@ app.use(cartValidation.checkWaivers);
 app.use(cartValidation.checkGuestCounts);
 //-------------------
 
-//-------------v11.8
+//-------------v11.8.0
 mailTransport.sendMail({//同时发送html和text邮件
 	from : '"Meadowlark Travel',
 	to : '493583130@qq.com',
