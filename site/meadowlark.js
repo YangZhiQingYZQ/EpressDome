@@ -6,7 +6,7 @@ let express = require("express"),
 //-----------创建视图引擎，对Express进行配置，将其作为默认的视图引擎
 	handlebars = require("express3-handlebars").create({
 		defaultLayout:"main",
-		//------ v7.4.7
+		//------ v7.4.7 
 		helpers : {
 			section : function(name,options){
 				if(!this._sections) this._sections = {}
@@ -32,9 +32,17 @@ let express = require("express"),
 app.engine('handlebars',handlebars.engine);
 app.set('view engine','handlebars');
 //------------
+//--------------11.6.1
+mailTransport.sendMail({
+	from : '"Meadowalrk Traval"<m18620309063@163.com>',
+	to : "493583130@qq.com",
+	subject:"Your Meadowlark Traval Tour",
+	text: "Thank you for booking your trip whit Meadowlark Travl."+"We look forward to your visit!",
+},function(err){
+	if(err) console.error("Unable to send emaile:"+err);
+});
 
-
-
+//---------------
 
 //---------------v10.0.0
 app.use(require("./lib/tourRequiresWaiver.js"));
