@@ -33,7 +33,7 @@ app.engine('handlebars',handlebars.engine);
 app.set('view engine','handlebars');
 //------------
 //--------------11.6.1
-mailTransport.sendMail({
+mailTransport.sendMail({//发送单个邮件
 	from : '"Meadowalrk Traval"<m18620309063@163.com>',
 	to : "493583130@qq.com",
 	subject:"Your Meadowlark Traval Tour",
@@ -44,11 +44,34 @@ mailTransport.sendMail({
 
 //---------------
 
+//---------------v11.6.2
+mailTransport.sendMail({//发送多封邮件
+	from : "'Meadowlark Travel'<m18620309063@163.com>",
+	to:"493583130@qq.com,18620309063@163.com",
+	subject : "Your Meadowlark Travel Tour",
+	text : "Thank you for booking your trip with Meadowlark Travel"
+},(err)=>{
+	if(err) console.log('Unable to send email:'+err);
+})
+//-----------------
+
 //---------------v10.0.0
 app.use(require("./lib/tourRequiresWaiver.js"));
 app.use(cartValidation.checkWaivers);
 app.use(cartValidation.checkGuestCounts);
 //-------------------
+
+//-------------v11.8
+mailTransport.sendMail({//同时发送html和text邮件
+	from : '"Meadowlark Travel',
+	to : '493583130@qq.com',
+	subject : "Your Meadowlark Travel Tour",
+	html:"<h1>1231</h1>",
+	genrateTextFromHtml : true
+},(err)=>{
+	if(err) console.log("Unable to send Email:" + err);
+});
+//------------------
 
 
 //------------v9.2.0引入并使用cookie-parser中间件
