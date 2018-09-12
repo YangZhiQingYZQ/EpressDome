@@ -26,6 +26,7 @@ let express = require("express"),
 			pass : credentials["163"].password,
 		}
 	}),
+	emailService = require("./lib/email.js")(credentials),//v11.8.3封装邮件功能
 	formidable = require('formidable'),//v8.7.0加载处理上传文件的插件
 	jqupload = require('jquery-file-upload-middleware');//v8.8.0加载处理上传文件的jquery插件
 	
@@ -189,6 +190,43 @@ app.set('port',process.env.PORT ||3000);//设置端口
 app.get('/',(req,res)=>{
 	res.render('home');
 });
+//------------v11.8.2
+app.post("/cart/checkout",(req,res)=>{
+	var cart = req.session.cart;
+	if(!cart) next(new Error("Cart does not exist."));
+	var name = req.body.name || "",email = req.body.email || "";
+	//输入验证
+	if(!email.match(VALID_EMAIL_REGEX)) return res.next(new Error("Invalid email address."));
+	//分配一个随机的购物车ID；一般我们会用一个数据库ID
+	cart.number = Math.random().toString().relace(/^0\.0*/,"");
+	cart.billing = {
+		name : name,
+		email:email
+	};
+	res.render("email/cart-thank-you",{
+		layout:null,
+		cart:cart,
+	},(err,html)=>{
+		if(err) console.log('error in email template');
+		mailTransport.sendMail({
+			from : '"Meadowlark ravl"',
+			to : cart.billing.email,
+			subjeck : 'Thank You for Book your Trip with Meadowlark',
+			html : html ,
+			generateTextFromHtml:true
+		},(err)=>{
+			if(err) console.error("Unable to send confirmation:"+err.stack);
+		})
+	});
+	res.render("cart-thank-you",{cart:cart});
+})
+
+//----------------------
+
+
+//--------------v11.8.3
+emailService.send("493583130@qq.com","Hood River tours on sale tody!","Get\'em while they\'re hot!");
+//----------------
 
 //------------v9.5.0
 app.get("/cookieNewsletter",(req,res)=>{
