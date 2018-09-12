@@ -26,9 +26,14 @@ let express = require("express"),
 			pass : credentials["163"].password,
 		}
 	}),
+	http = require('http');	//v12.1.0引入http模块
 	formidable = require('formidable'),//v8.7.0加载处理上传文件的插件
 	jqupload = require('jquery-file-upload-middleware');//v8.8.0加载处理上传文件的jquery插件
 	
+
+http.createServer(app).listen(app.get("port"),()=>{//v12.1.0查看运行模式
+	console.log('Express started in' + app.get("env") + "mode on http://localhost" + app.get("port")+";press Ctrl-C to terminate.")
+})
 app.engine('handlebars',handlebars.engine);
 app.set('view engine','handlebars');
 //------------
