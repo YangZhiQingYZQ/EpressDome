@@ -1,5 +1,6 @@
 // v10.0.0
 module.exports = (req,res,next)=>{
+	console.log(req.session)
 	let cart = req.session.cart;
 	if(!cart) return next();
 	if(cart.some(item=>{

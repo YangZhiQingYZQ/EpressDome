@@ -1,4 +1,5 @@
-let express = require("express"),
+module.exports = function(){
+	let express = require("express"),
 	app = express(),
 	fortune = require('./lib/fortune.js'),
 	cartValidation = require("./lib/cartValidations.js"),
@@ -87,8 +88,20 @@ mailTransport.sendMail({//发送多封邮件
 	text : "Thank you for booking your trip with Meadowlark Travel"
 },(err)=>{
 	if(err) console.log('Unable to send email:'+err);
-})
+});
 //-----------------
+
+
+
+//---------------v12.3.1
+//app.use((req,res,next)=>{
+//	const clcuster = require("cluster");
+//	if(cluster.isWorker) console.log("Worker %d received request",cluster.worker.id);
+//});
+
+
+
+//--------------
 
 //---------------v10.0.0
 app.use(require("./lib/tourRequiresWaiver.js"));
@@ -370,5 +383,7 @@ app.use((err,req,res,next)=>{
 app.listen(app.get('port'),()=>{
 	console.log("Express started on http://localhost:"+app.get("port")+";press Ctrl-C to terminate.");
 });
+
+}
 
 
