@@ -108,6 +108,44 @@ mailTransport.sendMail({//同时发送html和text邮件
 //------------------
 
 
+//------------------v12.3.2
+app.use((req,res,next)=>{//每个请求都包含在域中处理，可以追踪此请求中所有未捕获的错误，并作出相应的响应
+	const domain = require("domain").create();//为这个请求创建一个域
+	domain.on("error",err=>{//处理这个域中的错误
+		console.error("DOMAIN ERROR CAUGHT\n",err.stack);
+		try{
+			//在5s内进行故障保护关机
+			setTimeout(()=>{
+				console.error("Failsafe shutdow.");
+				process.exit(1);
+			},5000);
+			//从集群中断开
+			const worker = require("cluster").worker;
+			if(worker) worker.disconnect();
+			//停止接受新请求
+			server.close();
+			try{
+				//尝试使用Express错误路由
+				next(err);
+			}catch(err){
+				//如果Express错误路由失效，尝试返回普通文本响应
+				console.error("Express error mechanism failed.\n",err.sack);
+				res.statusCode = 500;
+				res.setHeader("content-type","text/plain");
+				res.end("Server error");
+			}
+		}catch(err){
+			console.error("Unable to send 500 response.\n",err.stack);
+		}
+	});
+	//向域中添加请求和响应对象
+	domain.add(req);
+	domain.add(res);
+	//执行该域中剩余的请求链条
+	domain.run(next);
+})
+//---------------------------
+
 //------------v9.2.0引入并使用cookie-parser中间件
 app.use(require('cookie-parser')(credentials.cookieSecret));
 //使用方式
@@ -233,6 +271,7 @@ app.use((req,res,next)=>{
 	next();
 });
 //--------------
+
 app.get('/',(req,res)=>{
 	res.render('home');
 });
@@ -374,8 +413,7 @@ app.use((req,res,next)=>{
 //500错误处理器（中间件）
 app.use((err,req,res,next)=>{
 	console.error(err.stack);
-	res.status(500);
-	res.render("500");
+	res.status(500).render("500");
 });
 
 //-----------v12.1.0
