@@ -4,12 +4,16 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "production": "set process.env.NODE_ENV=production",
+    "development": "set process.env.NODE_ENV=devlopment",
+    "supervisor": "supervisor meadowlark_cluster.js"
   },
   "author": "YangZhiQing",
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.18.3",
+    "cluster": "^0.7.7",
     "cookie-parser": "^1.4.3",
     "express": "^4.16.3",
     "express-logger": "^0.0.3",

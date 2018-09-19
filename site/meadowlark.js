@@ -92,12 +92,11 @@ mailTransport.sendMail({//发送多封邮件
 //-----------------
 
 
-
 //---------------v12.3.1
-//app.use((req,res,next)=>{
-//	const clcuster = require("cluster");
-//	if(cluster.isWorker) console.log("Worker %d received request",cluster.worker.id);
-//});
+app.use((req,res,next)=>{
+	const clcuster = require("cluster");
+	if(cluster.isWorker) console.log("Worker %d received request",cluster.worker.id);
+});
 
 
 
@@ -380,11 +379,11 @@ app.use((err,req,res,next)=>{
 	res.render("500");
 });
 
-
+//-----------v12.1.0
 app.listen(app.get('port'),()=>{
 	console.log("Express started on http://localhost:"+app.get("port")+";press Ctrl-C to terminate.");
 });
-
+//-----------
 }
 
 
