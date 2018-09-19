@@ -92,15 +92,7 @@ mailTransport.sendMail({//发送多封邮件
 //-----------------
 
 
-//---------------v12.3.1
-app.use((req,res,next)=>{
-	const clcuster = require("cluster");
-	if(cluster.isWorker) console.log("Worker %d received request",cluster.worker.id);
-});
 
-
-
-//--------------
 
 
 //-------------v11.8.0
@@ -234,6 +226,13 @@ app.use(cartValidation.checkWaivers);
 app.use(cartValidation.checkGuestCounts);
 //-------------------
 
+//---------------v12.3.1
+app.use((req,res,next)=>{
+	const cluster = require("cluster");
+	if(cluster.isWorker) console.log("Worker %d received request",cluster.worker.id);
+	next();
+});
+//--------------
 app.get('/',(req,res)=>{
 	res.render('home');
 });
