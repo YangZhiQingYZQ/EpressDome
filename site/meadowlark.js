@@ -103,11 +103,6 @@ mailTransport.sendMail({//发送多封邮件
 
 //--------------
 
-//---------------v10.0.0
-app.use(require("./lib/tourRequiresWaiver.js"));
-app.use(cartValidation.checkWaivers);
-app.use(cartValidation.checkGuestCounts);
-//-------------------
 
 //-------------v11.8.0
 mailTransport.sendMail({//同时发送html和text邮件
@@ -135,7 +130,7 @@ app.use(require('express-session')());
 
 //-------------v9.5.0
 app.use((req,res,next)=>{
-	//如果有即显消息，把它传到上下文中，然后清楚它
+	//如果有即显消息，把它传到上下文中，然后清除它
 	res.locals.flash = req.session.flash;
 	delete req.session.flash;
 	next();
@@ -233,6 +228,12 @@ app.get('/headers',(req,res)=>{
 app.use(express.static(__dirname+"/public"));
 
 app.set('port',process.env.PORT ||3000);//设置端口
+
+//---------------v10.0.0
+app.use(require("./lib/tourRequiresWaiver.js"));
+app.use(cartValidation.checkWaivers);
+app.use(cartValidation.checkGuestCounts);
+//-------------------
 
 app.get('/',(req,res)=>{
 	res.render('home');
