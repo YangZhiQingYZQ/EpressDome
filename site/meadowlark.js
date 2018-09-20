@@ -2,6 +2,7 @@ module.exports = function(){
 	const express = require("express"),
 	fs = require("fs"),
 	app = express(),
+	vhost = require("vhost"),
 	fortune = require('./lib/fortune.js'),
 	cartValidation = require("./lib/cartValidations.js"),
 	credentials = require('./credentials.js'),//v9.1.0cookie秘钥
@@ -272,6 +273,19 @@ app.use((req,res,next)=>{
 	next();
 });
 //--------------
+
+
+//-------------------v14.2.0子域名
+const admin = express.Router();
+app.use(vhost("admin.*",admin));
+
+admin.get("/",(req,res)=>{
+	res.render("about");
+});
+
+
+
+//------------------------
 
 app.get('/',(req,res)=>{
 	res.render('home');
