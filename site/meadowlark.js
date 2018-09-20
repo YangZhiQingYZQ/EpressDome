@@ -1,5 +1,6 @@
 module.exports = function(){
-	let express = require("express"),
+	const express = require("express"),
+	fs = require("fs"),
 	app = express(),
 	fortune = require('./lib/fortune.js'),
 	cartValidation = require("./lib/cartValidations.js"),
@@ -133,7 +134,7 @@ app.use((req,res,next)=>{//每个请求都包含在域中处理，可以追踪�
 				res.statusCode = 500;
 				res.setHeader("content-type","text/plain");
 				res.end("Server error");
-			}
+			} 
 		}catch(err){
 			console.error("Unable to send 500 response.\n",err.stack);
 		}
@@ -320,7 +321,7 @@ app.get('/jqupload',(req,res)=>{
 });
 //------------------
 
-//----------------v8.7.0处理上传的文件
+//----------------v8.7.0处理上传的文件=======v13.1.0
 app.get('/contest/vacation-photo',(req,res)=>{
 	let now  = new Date();
 	res.render('contest/vacation-photo',{
@@ -328,15 +329,48 @@ app.get('/contest/vacation-photo',(req,res)=>{
 		month : now.getMonth()
 	});
 });
+
+const dataDir = __dirname + "/data",
+	  vacationPhotoDir = dataDir + "/vaction-photo";
+fs.existsSync(dataDir) || fs.mkdirSync(dataDir);
+fs.existsSync(vacationPhotoDir) || fs.mkdirSync(vacationPhotoDir);
+function saveContestEntry(contestName,email,year,month,photoPath){
+	
+}
+
 app.post('/contest/vacation-photo/:year/:month',(req,res)=>{
-	let form = new formidable.IncomingForm();
-	form.parse(req,(err,fields,file)=>{
-		if(err) return res.redirect(303,'/about');
-		console.log('received fields:');
-		console.log(fields);
-		console.log('received files:');
-		console.log(files);
-		res.redirect(303,"/about");
+//	let form = new formidable.IncomingForm();
+//	form.parse(req,(err,fields,file)=>{
+//		if(err) return res.redirect(303,'/about');
+//		console.log('received fields:');
+//		console.log(fields);
+//		console.log('received files:');
+//		console.log(files);
+//		res.redirect(303,"/about");
+//	})
+	const form = new formidable.IncomingFrom();
+	form.parse(req,(err,fields,files)=>{
+		if(err) return res.redirect(303,"/error");
+		if(err){
+			res.session.flash = {
+				type : "danger",
+				intro : "Oops!",
+				message : "There was an error processing your submission."+"Pealase try again",
+			};
+			return res.redirect(303,"/contest/vacation-photo");
+		};
+		const photo = files.photo;
+		const dir = vacationPhotoDir + "/" + Date.now();
+		const path = dir + "/" + photo.name;
+		fs.mkdirSync(dir);
+		fs.renameSync(photo.path,dir + "/" + "photo.name");
+		saveContestEntry("vaction-photo",fields.email,req.params.year,req.params.month,path);
+		req.session.flash = {
+			type : "success",
+			intro :"Good luck!",
+			message : "You have been entered into the contest.",
+		}
+		return res.redirect(303,"/contest/vaction-photo");
 	})
 });
 //----------------------------
