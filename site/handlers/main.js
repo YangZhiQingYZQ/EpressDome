@@ -1,4 +1,4 @@
-
+//-------------------------------v14.8.0
 const fs = require("fs"),
 	  fortune = require('../lib/fortune.js');
 exports.home = function(req, res) {
@@ -149,3 +149,4 @@ exports.hoodRiver = function(){
 exports.requestGroupRate = function(){
 	res.render("tours/request-group-rate");
 }
+//------------------------------------
